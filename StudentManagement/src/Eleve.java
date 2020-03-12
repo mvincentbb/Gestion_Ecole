@@ -1,3 +1,19 @@
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -13,8 +29,11 @@ public class Eleve extends javax.swing.JFrame {
     /**
      * Creates new form ELeve
      */
+    DefaultTableModel d;
     public Eleve() {
         initComponents();
+        connect();
+        load_eleve();
     }
 
     /**
@@ -26,7 +45,7 @@ public class Eleve extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        genre = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -40,9 +59,9 @@ public class Eleve extends javax.swing.JFrame {
         txteleveParent = new javax.swing.JTextField();
         txteleveTelephone = new javax.swing.JTextField();
         txteleveAdresse = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        txtGenre = new javax.swing.JComboBox<>();
+        txtClasse = new javax.swing.JComboBox<>();
+        txtSection = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
@@ -54,7 +73,7 @@ public class Eleve extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        genre.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel1.setText("Nom");
 
@@ -78,21 +97,34 @@ public class Eleve extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Masculin", "Feminin" }));
-
-        jComboBox3.addActionListener(new java.awt.event.ActionListener() {
+        txtGenre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Masculin", "Feminin" }));
+        txtGenre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox3ActionPerformed(evt);
+                txtGenreActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        txtClasse.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2" }));
+        txtClasse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtClasseActionPerformed(evt);
+            }
+        });
+
+        txtSection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "3" }));
+        txtSection.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSectionActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout genreLayout = new javax.swing.GroupLayout(genre);
+        genre.setLayout(genreLayout);
+        genreLayout.setHorizontalGroup(
+            genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(genreLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
@@ -102,60 +134,60 @@ public class Eleve extends javax.swing.JFrame {
                     .addComponent(jLabel7)
                     .addComponent(jLabel8))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtnaissance, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(txteleveParent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
                         .addComponent(txteleveNom, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, 115, Short.MAX_VALUE)
+                    .addGroup(genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(txtGenre, javax.swing.GroupLayout.Alignment.LEADING, 0, 115, Short.MAX_VALUE)
                         .addComponent(txteleveTelephone, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jComboBox3, javax.swing.GroupLayout.Alignment.LEADING, 0, 107, Short.MAX_VALUE)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(txtSection, javax.swing.GroupLayout.Alignment.LEADING, 0, 107, Short.MAX_VALUE)
+                        .addComponent(txtClasse, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(txteleveAdresse, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        genreLayout.setVerticalGroup(
+            genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(genreLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(genreLayout.createSequentialGroup()
+                        .addGroup(genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(txteleveNom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(genreLayout.createSequentialGroup()
                                 .addGap(22, 22, 22)
                                 .addComponent(jLabel2)
                                 .addGap(17, 17, 17))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, genreLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txteleveParent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3)
                             .addComponent(txtnaissance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(23, 23, 23)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtGenre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(15, 15, 15)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(txteleveTelephone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(17, 17, 17)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
                             .addComponent(txteleveAdresse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(22, 22, 22)
                         .addComponent(jLabel7))
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtClasse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(genreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtSection, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28))
         );
 
@@ -167,6 +199,11 @@ public class Eleve extends javax.swing.JFrame {
                 "EleveID", "Nom", "Date de Naissance", "Genre", "Telephone", "Adresse", "Classe", "Section"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jLabel9.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
@@ -180,8 +217,18 @@ public class Eleve extends javax.swing.JFrame {
         });
 
         jButton2.setText("Modifier");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Supprimer");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Reinitialiser");
 
@@ -210,7 +257,7 @@ public class Eleve extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(genre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -230,7 +277,7 @@ public class Eleve extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(genre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1)
@@ -246,21 +293,160 @@ public class Eleve extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
+    private void txtSectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSectionActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox3ActionPerformed
+    }//GEN-LAST:event_txtSectionActionPerformed
 
     private void txteleveNomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txteleveNomActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txteleveNomActionPerformed
-
+    Connection con;
+    PreparedStatement pst;
+    public void connect(){
+        try {
+            java.lang.Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Eleve.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost/schoolmgmt","root", "");
+        } catch (SQLException ex) {
+            Logger.getLogger(Eleve.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String nom = txteleveNom.getText();
+        String parent = txteleveParent.getText();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String date = df.format(txtnaissance.getDate());
+        String tgenre = txtGenre.getSelectedItem().toString();
+        String classe = txtClasse.getSelectedItem().toString();
+        String section = txtSection.getSelectedItem().toString();
+        String telephone = txteleveTelephone.getText();
+        try {
+            pst = con.prepareStatement("insert into eleve(nom, parent, date, sexe, classe, section, telephone) values (?,?,?,?,?,?,?)");
+            pst.setString(1, nom);
+            pst.setString(2, parent);
+            pst.setString(3, date);
+            pst.setString(4, tgenre);
+            pst.setString(5, classe);
+            pst.setString(6, section);
+            pst.setString(7, telephone);
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(this, "eleve ajoute");
+            txteleveNom.setText("");
+            txteleveParent.setText("");
+            txtnaissance.setDateFormatString("");
+            txtGenre.setSelectedItem(0);
+            txtClasse.setSelectedItem(0);
+            txtSection.setSelectedItem(0);
+            load_eleve();
+        } catch (SQLException ex) {
+            Logger.getLogger(Eleve.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    ResultSet rs;
+    public void load_eleve(){
+        int c;
+        try{
+            pst = con.prepareStatement("select * from eleve");
+            rs = pst.executeQuery();
+            ResultSetMetaData rsd = rs.getMetaData();
+            c = rsd.getColumnCount();
+            d = (DefaultTableModel) jTable1.getModel();
+            d.setRowCount(0);
+            while (rs.next()) {                
+                Vector v2 = new Vector();
+                for(int i=1; i<=c ; i++){
+                    v2.add(rs.getString("id"));
+                    v2.add(rs.getString("nom"));
+                    v2.add(rs.getString("parent"));
+                    v2.add(rs.getString("date"));
+                    v2.add(rs.getString("sexe"));
+                    v2.add(rs.getString("telephone"));
+                    v2.add(rs.getString("classe"));
+                    v2.add(rs.getString("section"));
+                }
+                d.addRow(v2);
+            }
+        }catch(Exception e){
+            
+        }
+    }
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void txtClasseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtClasseActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtClasseActionPerformed
+
+    private void txtGenreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGenreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtGenreActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {
+            d = (DefaultTableModel) jTable1.getModel();
+            int index = jTable1.getSelectedRow();
+            String id = d.getValueAt(index, 0).toString();
+            
+            pst = con.prepareStatement("update eleve set nom = ?, parent = ?, date = ?, sexe = ?, classe = ?, section = ?, telephone = ? where id = ?");
+            pst.setString(1, txteleveNom.getText());
+            pst.setString(2, txteleveParent.getText());
+            pst.setString(3, txtnaissance.getDateFormatString());
+            pst.setString(4,txtGenre.getSelectedItem().toString());
+            pst.setString(5, txtClasse.getSelectedItem().toString());
+            pst.setString(6, txtSection.getSelectedItem().toString());
+            pst.setString(7, txteleveTelephone.getText());
+            pst.setString(8, id);
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(this, "eleve modifie");
+            txteleveNom.setText("");
+            txteleveParent.setText("");
+            txtnaissance.setDateFormatString("");
+            txtGenre.setSelectedItem(0);
+            txtClasse.setSelectedItem(0);
+            txtSection.setSelectedItem(0);
+            load_eleve();
+        } catch (SQLException ex) {
+            Logger.getLogger(Eleve.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        try {
+            d = (DefaultTableModel) jTable1.getModel();
+            int index = jTable1.getSelectedRow();
+            String id = d.getValueAt(index, 0).toString();
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String) d.getValueAt(index, 3).toString());
+            txteleveNom.setText(d.getValueAt(index, 1).toString());
+            txteleveParent.setText(d.getValueAt(index, 2 ).toString());
+            txtnaissance.setDate(date);
+            txtGenre.setSelectedItem(d.getValueAt(index, 4).toString());
+            txteleveTelephone.setText(d.getValueAt(index, 5).toString());
+            txteleveAdresse.setText(d.getValueAt(index, 5).toString());
+            txtClasse.setSelectedItem(d.getValueAt(index, 6).toString());
+            txtSection.setSelectedItem(d.getValueAt(index, 7).toString());
+        } catch (ParseException ex) {
+            Logger.getLogger(Eleve.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try {
+            d = (DefaultTableModel) jTable1.getModel();
+            int index = jTable1.getSelectedRow();
+            String id = d.getValueAt(index, 0).toString();
+            pst = con.prepareStatement("delete from eleve where id = ?");
+            pst.setString(1, id);
+            pst.execute();
+            load_eleve();
+            JOptionPane.showMessageDialog(this, "suppression reussi");
+        } catch (SQLException ex) {
+            Logger.getLogger(Eleve.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -299,14 +485,12 @@ public class Eleve extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel genre;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -316,9 +500,11 @@ public class Eleve extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JComboBox<String> txtClasse;
+    private javax.swing.JComboBox<String> txtGenre;
+    private javax.swing.JComboBox<String> txtSection;
     private javax.swing.JTextField txteleveAdresse;
     private javax.swing.JTextField txteleveNom;
     private javax.swing.JTextField txteleveParent;

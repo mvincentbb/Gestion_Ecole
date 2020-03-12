@@ -14,17 +14,26 @@ import java.util.Date;
 public class Eleve {
     private Integer id;
     private String nom;
-    private String prenom;
+    private String parent;
     private Date date;
     private String sexe;
     private Integer telephone;
     private String section;
     private Classe classe;
 
-    public Eleve(Integer id, String nom, String prenom, Date date, String sexe, Integer telephone, String section, Classe classe) {
+    public Eleve(Integer id, String nom, String parent, Date date, String sexe, Integer telephone, String section, Classe classe) {
         this.id = id;
         this.nom = nom;
-        this.prenom = prenom;
+        this.parent = parent;
+        this.date = date;
+        this.sexe = sexe;
+        this.telephone = telephone;
+        this.section = section;
+        this.classe = classe;
+    }
+    public Eleve(String nom, String parent, Date date, String sexe, Integer telephone, String section, Classe classe) {
+        this.nom = nom;
+        this.parent = parent;
         this.date = date;
         this.sexe = sexe;
         this.telephone = telephone;
@@ -48,11 +57,11 @@ public class Eleve {
     }
 
     public String getPrenom() {
-        return prenom;
+        return parent;
     }
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
+    public void setPrenom(String parent) {
+        this.parent = parent;
     }
 
     public Date getDate() {
