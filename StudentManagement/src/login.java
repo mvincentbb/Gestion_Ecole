@@ -191,7 +191,7 @@ public class login extends javax.swing.JFrame {
             if(rs.next()){
                 int id = rs.getInt("id");
                 this.setVisible(false);
-                new TeacherMain(id, username, utype).setVisible(true);
+                new Main(id, username, utype).setVisible(true);
             }else{
                 JOptionPane.showMessageDialog(this, "nom d'utilisateur ou mot de passe errone");
                 txtnomUtilisateur.setText("");

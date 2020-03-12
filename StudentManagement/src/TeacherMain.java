@@ -19,19 +19,6 @@ public class TeacherMain extends javax.swing.JFrame {
         jLabel5.setText("");
     }
 
-    private int iid;
-    String uname;
-    String usertype;
-    TeacherMain(int id, String username, String utype) {
-        initComponents();
-        
-        this.uname = username;
-        this.usertype = utype;
-        this.iid = id;
-        jLabel4.setText(uname);
-        jLabel5.setText(usertype);
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -195,7 +182,8 @@ public class TeacherMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
+        this.setVisible(false);
+        new login().setVisible(true);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -203,9 +191,7 @@ public class TeacherMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        Eleve eleveInt = new Eleve();
-        eleveInt.setLocationRelativeTo(this);
-        eleveInt.setVisible(true);
+        
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
