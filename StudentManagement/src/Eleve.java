@@ -231,6 +231,11 @@ public class Eleve extends javax.swing.JFrame {
         });
 
         jButton4.setText("Reinitialiser");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Fermer");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -447,6 +452,17 @@ public class Eleve extends javax.swing.JFrame {
             Logger.getLogger(Eleve.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        txteleveNom.setText("");
+        txteleveParent.setText("");
+        txtnaissance.setDate(null);
+        txtGenre.setSelectedIndex(0);
+        txteleveTelephone.setText("");
+        txteleveAdresse.setText("");
+        txtClasse.setSelectedIndex(0);
+        txtSection.setSelectedIndex(0);
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
