@@ -30,12 +30,27 @@ public class Eleve extends javax.swing.JFrame {
      * Creates new form ELeve
      */
     DefaultTableModel d;
+    Vector classes = new Vector();
     public Eleve() {
         initComponents();
         connect();
         load_eleve();
+        load_classe();
     }
-
+    public void load_classe(){
+        int c;
+        try{
+            pst = con.prepareStatement("select * from classe");
+            rs = pst.executeQuery();
+            ResultSetMetaData rsd = rs.getMetaData();
+            c = rsd.getColumnCount();
+            while (rs.next()) {
+                txtClasse.addItem(rs.getString("libelle"));
+            }
+        }catch(Exception e){
+            
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -104,14 +119,13 @@ public class Eleve extends javax.swing.JFrame {
             }
         });
 
-        txtClasse.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2" }));
         txtClasse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtClasseActionPerformed(evt);
             }
         });
 
-        txtSection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "3" }));
+        txtSection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "lycee", "college" }));
         txtSection.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSectionActionPerformed(evt);
