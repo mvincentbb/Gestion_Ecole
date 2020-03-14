@@ -1,3 +1,13 @@
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -15,6 +25,21 @@ public class login extends javax.swing.JFrame {
      */
     public login() {
         initComponents();
+        connect();
+    }
+    Connection con;
+    PreparedStatement pst;
+    public void connect(){
+        try {
+            java.lang.Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Eleve.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost/schoolmgmt","root", "");
+        } catch (SQLException ex) {
+            Logger.getLogger(Eleve.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -153,7 +178,30 @@ public class login extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPasswordActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String username = txtnomUtilisateur.getText();
+        String password = txtPassword.getText();
+        String utype = txtutype.getSelectedItem().toString();
+        ResultSet rs;
+        try {
+            pst = con.prepareStatement("select * from utilisateur where username = ? and password = ? and useType = ?");
+            pst.setString(1, username);
+            pst.setString(2, password);
+            pst.setString(3, utype);
+            rs = pst.executeQuery();
+            if(rs.next()){
+                int id = rs.getInt("id");
+                this.setVisible(false);
+                new Main(id, username, utype).setVisible(true);
+            }else{
+                JOptionPane.showMessageDialog(this, "nom d'utilisateur ou mot de passe errone");
+                txtnomUtilisateur.setText("");
+                txtPassword.setText("");
+                txtutype.setSelectedIndex(-1);
+                txtnomUtilisateur.requestFocus();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

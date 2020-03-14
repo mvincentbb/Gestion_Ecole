@@ -314,6 +314,7 @@ public class Classe extends javax.swing.JFrame {
         Class_load();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+//<<<<<<< HEAD:StudentManagement/src/Classe.java
     
     public void Class_load() {
         int c;
@@ -346,6 +347,9 @@ public class Classe extends javax.swing.JFrame {
         
     }
     
+                                        
+
+//>>>>>>> 23df2bfc94c173b3289b77a9d98cba5d897811bb:StudentManagement/src/Class.java
     /**
      * @param args the command line arguments
      */

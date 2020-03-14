@@ -335,6 +335,7 @@ public class Utilisateur extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton3ActionPerformed
 
+//<<<<<<< HEAD
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
         // TODO add your handling code here:
         
@@ -426,10 +427,7 @@ public class Utilisateur extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton4ActionPerformed
     
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        this.setVisible(false);
-    }//GEN-LAST:event_jButton5ActionPerformed
+                                   
     
     public void User_load() throws SQLException {
         int c;
@@ -478,6 +476,13 @@ public class Utilisateur extends javax.swing.JFrame {
             Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+//||||||| merged common ancestors
+//=======
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+//>>>>>>> 23df2bfc94c173b3289b77a9d98cba5d897811bb
     /**
      * @param args the command line arguments
      */
