@@ -1,3 +1,16 @@
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,13 +21,38 @@
  *
  * @author vincent
  */
-public class Class extends javax.swing.JFrame {
+public class Classe extends javax.swing.JFrame {
+
+    static void forName(String commysqljdbcDriver) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     /**
      * Creates new form Class
      */
-    public Class() {
+    public Classe() {
         initComponents();
+        Connect();
+        Class_load();
+    }
+    
+    Connection con;
+    PreparedStatement pst;
+    ResultSet rs;
+    DefaultTableModel d;
+    
+    
+     public void Connect(){
+        try {
+            java.lang.Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:8889/schoolmgmt", "user1", "");
+            
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -30,8 +68,8 @@ public class Class extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        txtclassname = new javax.swing.JComboBox<>();
+        txtsection = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
@@ -50,9 +88,9 @@ public class Class extends javax.swing.JFrame {
 
         jLabel3.setText("Section");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "6eme", "5eme", "4eme", "3eme", "2ndeA4", "2ndeCD", "1ereA4", "1ereD", "1ereC", "TleC", "TleD", "TleA4", " " }));
+        txtclassname.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "6eme", "5eme", "4eme", "3eme", "2ndeA4", "2ndeCD", "1ereA4", "1ereD", "1ereC", "TleC", "TleD", "TleA4", " " }));
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "C", "D" }));
+        txtsection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "C", "D" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -65,8 +103,8 @@ public class Class extends javax.swing.JFrame {
                     .addComponent(jLabel3))
                 .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtclassname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtsection, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -75,11 +113,11 @@ public class Class extends javax.swing.JFrame {
                 .addGap(57, 57, 57)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtclassname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(62, 62, 62)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtsection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(46, Short.MAX_VALUE))
         );
 
@@ -92,6 +130,11 @@ public class Class extends javax.swing.JFrame {
                 "ID", "Nom de la Classe", "Section"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Sauvegarder");
@@ -102,8 +145,18 @@ public class Class extends javax.swing.JFrame {
         });
 
         jButton2.setText("Supprimer");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Fermer");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Reinitialiser");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -161,12 +214,138 @@ public class Class extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        
+        
+        try {
+                String clname = txtclassname.getSelectedItem().toString();
+                String section = txtsection.getSelectedItem().toString();
+                
+
+            
+            pst = con.prepareStatement("insert into classe(libelle,section)values(?,?)");
+            
+            pst.setString(1, clname);
+            pst.setString(2, section);
+           
+            
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Classe ajoute");
+            
+            txtsection.setSelectedIndex(-1);
+            txtclassname.setSelectedIndex(-1);
+            Class_load();
+            
+            
+            
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        
+         
+        d = (DefaultTableModel)jTable1.getModel();
+        
+        int selectIndex = jTable1.getSelectedRow();
+        String id =  d.getValueAt(selectIndex, 0).toString();
+        
+        txtclassname.setSelectedItem(d.getValueAt(selectIndex, 1).toString());
+        txtsection.setSelectedItem(d.getValueAt(selectIndex, 2).toString());
+        
+        jButton1.setEnabled(false);
+       
+        
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+                // TODO add your handling code here:
+        try{
+            
+            d = (DefaultTableModel)jTable1.getModel();
+            
+            int selectIndex = jTable1.getSelectedRow();
+            String id =  d.getValueAt(selectIndex, 0).toString();
+            
+            
+            pst = con.prepareStatement("delete from classe where id = ?");
+            
+            
+            pst.setString(1, id);
+            
+            pst.executeUpdate();
+            
+            
+            JOptionPane.showMessageDialog(this, "Classe  supprime ");
+            
+            jButton1.setEnabled(true);
+        
+            txtclassname.setSelectedIndex(-1);
+            txtsection.setSelectedIndex(-1);
+            Class_load();
+            
+            
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        jButton1.setEnabled(true);
+        txtclassname.setSelectedIndex(-1);
+        txtsection.setSelectedIndex(-1);
+        Class_load();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    
+    public void Class_load() {
+        int c;
+        try {
+            pst = con.prepareCall("select * from classe ");
+            
+            rs = pst.executeQuery();
+            
+            ResultSetMetaData rsd  = rs.getMetaData();
+            c = rsd.getColumnCount();
+            
+            
+            d = (DefaultTableModel)jTable1.getModel();
+            d.setRowCount(0);
+            
+            while (rs.next()){
+                Vector v = new Vector();
+                
+                for(int i = 0; i <= c; i++){
+                    v.add(rs.getString("id"));
+                    v.add(rs.getString("libelle"));
+                    v.add(rs.getString("section"));                
+                }
+                d.addRow(v);
+        }
+            
+         } catch (SQLException ex) {
+            Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -184,20 +363,21 @@ public class Class extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Class.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Classe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Class.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Classe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Class.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Classe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Class.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Classe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Class().setVisible(true);
+                new Classe().setVisible(true);
             }
         });
     }
@@ -207,13 +387,13 @@ public class Class extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JComboBox<String> txtclassname;
+    private javax.swing.JComboBox<String> txtsection;
     // End of variables declaration//GEN-END:variables
 }

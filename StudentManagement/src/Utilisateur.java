@@ -1,3 +1,17 @@
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -13,9 +27,20 @@ public class Utilisateur extends javax.swing.JFrame {
     /**
      * Creates new form Utilisateur
      */
-    public Utilisateur() {
+    
+    Connection con;
+    PreparedStatement pst;
+    ResultSet rs;
+    DefaultTableModel d;
+    
+    public Utilisateur() throws SQLException {
         initComponents();
+        Connect();
+        User_load();
     }
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -132,6 +157,11 @@ public class Utilisateur extends javax.swing.JFrame {
         });
 
         jButton2.setText("Modifier");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Supprimer");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -140,9 +170,19 @@ public class Utilisateur extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setText("Rafraichir");
+        jButton4.setText("Reinitialiser");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Fermer");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Comic Sans MS", 1, 24)); // NOI18N
         jLabel7.setText("Creation d'Utilisateur");
@@ -152,9 +192,14 @@ public class Utilisateur extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Telephone", "Adresse", "Nom d'Utilisateur", "Mot de Passe", "Type d'Utilisateur"
+                "ID", "Nom", "Telephone", "Adresse", "Nom d'Utilisateur", "Type d'Utilisateur"
             }
         ));
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -176,7 +221,7 @@ public class Utilisateur extends javax.swing.JFrame {
                         .addComponent(jButton5))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)
+                        .addGap(34, 34, 34)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 695, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(100, 100, 100))
             .addGroup(layout.createSequentialGroup()
@@ -208,13 +253,231 @@ public class Utilisateur extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+     
+        
+        try {
+                String nom = txtnom.getText();
+                String username = txtusername.getText();
+                String password = txtPassword.getText();
+                String addresse = txtadresse.getText().toString();
+                String telephone = txttelephone.getText();
+                String utype = txtutype.getSelectedItem().toString();
+
+            
+            pst = con.prepareStatement("insert into utilisateur(nom,telephone,addresse,username,password,useType)values(?,?,?,?,?,?)");
+            
+            pst.setString(1, nom);
+            pst.setString(2, telephone);
+            pst.setString(3, addresse);
+            pst.setString(4, username);
+            pst.setString(5, password);
+            pst.setString(6, utype);
+            
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Utilisateur ajoute");
+            
+            txtnom.setText("");
+            txtusername.setText("");
+            txtPassword.setText("");
+            txtadresse.setText("");
+            txttelephone.setText("");
+            txtutype.setSelectedIndex(-1);
+            txtnom.requestFocus();
+            
+            
+            User_load();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        try{
+            
+            d = (DefaultTableModel)jTable2.getModel();
+            
+            int selectIndex = jTable2.getSelectedRow();
+            String id =  d.getValueAt(selectIndex, 0).toString();
+            
+            
+            pst = con.prepareStatement("delete from utilisateur where id = ?");
+            
+            
+            pst.setString(1, id);
+            
+            pst.executeUpdate();
+            
+            
+            JOptionPane.showMessageDialog(this, "Utilisateur supprime ");
+            
+            jButton1.setEnabled(true);
+            txtnom.setText("");
+            txtusername.setText("");
+            txtPassword.setText("");
+            txtadresse.setText("");
+            txttelephone.setText("");
+            txtutype.setSelectedIndex(-1);
+            txtnom.requestFocus();
+            User_load();
+            
+            
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+        // TODO add your handling code here:
+        
+        d = (DefaultTableModel)jTable2.getModel();
+        
+        int selectIndex = jTable2.getSelectedRow();
+        String id =  d.getValueAt(selectIndex, 0).toString();
+        txtnom.setText(d.getValueAt(selectIndex, 1).toString());
+        txttelephone.setText(d.getValueAt(selectIndex, 2).toString());
+        txtadresse.setText(d.getValueAt(selectIndex, 3).toString());
+        txtusername.setText(d.getValueAt(selectIndex, 4).toString());
+//        txtPassword.setText(d.getValueAt(selectIndex, 5).toString());
+        txtutype.setSelectedItem(d.getValueAt(selectIndex, 5).toString());
+        
+        jButton1.setEnabled(false);
+        
+        
+    }//GEN-LAST:event_jTable2MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        
+        try {
+            
+            d = (DefaultTableModel)jTable2.getModel();
+            
+            int selectIndex = jTable2.getSelectedRow();
+            String id =  d.getValueAt(selectIndex, 0).toString();
+            String nom = txtnom.getText();
+            String username = txtusername.getText();
+//                String password = txtPassword.getText();
+            String addresse = txtadresse.getText().toString();
+            String telephone = txttelephone.getText();
+            String utype = txtutype.getSelectedItem().toString();
+
+
+            pst = con.prepareStatement("update utilisateur set nom = ?,telephone = ?,addresse= ?,username = ?,useType = ? where id = ?");
+
+            pst.setString(1, nom);
+            pst.setString(2, telephone);
+            pst.setString(3, addresse);
+            pst.setString(4, username);
+//            pst.setString(5, password);
+            pst.setString(5, utype);
+            pst.setString(6, id);
+
+            pst.executeUpdate();
+
+
+            JOptionPane.showMessageDialog(this, "Utilisateur modifie");
+
+            jButton1.setEnabled(true);
+            txtnom.setText("");
+            txtusername.setText("");
+            txtPassword.setText("");
+            txtadresse.setText("");
+            txttelephone.setText("");
+            txtutype.setSelectedIndex(-1);
+            txtnom.requestFocus();
+            User_load();
+
+
+
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
+    
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        
+        
+        try {
+            jButton1.setEnabled(true);
+            txtnom.setText("");
+            txtusername.setText("");
+            txtPassword.setText("");
+            txtadresse.setText("");
+            txttelephone.setText("");
+            txtutype.setSelectedIndex(-1);
+            txtnom.requestFocus();
+            User_load();
+        } catch (SQLException ex) {
+            Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+    
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton5ActionPerformed
+    
+    public void User_load() throws SQLException {
+        int c;
+        try {
+            pst = con.prepareCall("select * from utilisateur ");
+            
+            rs = pst.executeQuery();
+            
+            ResultSetMetaData rsd  = rs.getMetaData();
+            c = rsd.getColumnCount();
+            
+            
+            d = (DefaultTableModel)jTable2.getModel();
+            d.setRowCount(0);
+            
+            while (rs.next()){
+                Vector v = new Vector();
+                
+                for(int i = 0; i <= c; i++){
+                    v.add(rs.getString("id"));
+                    v.add(rs.getString("nom"));
+                    v.add(rs.getString("telephone"));
+                    v.add(rs.getString("addresse"));
+                    v.add(rs.getString("username"));
+                    v.add(rs.getString("useType"));
+                    
+                }
+                
+                d.addRow(v);
+        }
+            
+         } catch (SQLException ex) {
+            Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    public void Connect(){
+        try {
+            java.lang.Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:8889/schoolmgmt", "user1", "");
+            
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -245,7 +508,11 @@ public class Utilisateur extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Utilisateur().setVisible(true);
+                try {
+                    new Utilisateur().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Utilisateur.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

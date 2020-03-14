@@ -39,7 +39,7 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                       <Component id="jScrollPane2" min="-2" pref="695" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -225,6 +225,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Modifier"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButton3">
       <Properties>
@@ -236,13 +239,19 @@
     </Component>
     <Component class="javax.swing.JButton" name="jButton4">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Rafraichir"/>
+        <Property name="text" type="java.lang.String" value="Reinitialiser"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButton5">
       <Properties>
         <Property name="text" type="java.lang.String" value="Fermer"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton5ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
@@ -264,10 +273,10 @@
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="6" rowCount="0">
                 <Column editable="true" title="ID" type="java.lang.Object"/>
+                <Column editable="true" title="Nom" type="java.lang.Object"/>
                 <Column editable="true" title="Telephone" type="java.lang.Object"/>
                 <Column editable="true" title="Adresse" type="java.lang.Object"/>
                 <Column editable="true" title="Nom d&apos;Utilisateur" type="java.lang.Object"/>
-                <Column editable="true" title="Mot de Passe" type="java.lang.Object"/>
                 <Column editable="true" title="Type d&apos;Utilisateur" type="java.lang.Object"/>
               </Table>
             </Property>
@@ -309,6 +318,9 @@
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTable2MouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
